@@ -49,9 +49,17 @@ const SingleTodo: React.FC<{
   };
 
   const handleDelete = (id: number) => {
-    const deleteTodo = todos.map((todo) =>
-      todo.id === id ? { ...todo } : todo
+    const deleteTodo = todos.filter((todo) => todo.id !== id);
+
+    setTodos(deleteTodo);
+  };
+
+  const handleDone = (id: number) => {
+    const doneTodo = todos.map((todo) =>
+      todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
     );
+
+    setTodos(doneTodo);
   };
 
   useEffect(() => {
@@ -73,6 +81,8 @@ const SingleTodo: React.FC<{
           className="edit_field"
           ref={inputRef}
         />
+      ) : todo.isDone ? (
+        <s> {todo.todo} </s>
       ) : (
         <li> {todo.todo} </li>
       )}
@@ -80,10 +90,12 @@ const SingleTodo: React.FC<{
         <span>
           <AiFillEdit
             onClick={() => {
-              if (!edit) {
-                setEdit(true);
-              } else {
-                handleEdit(todo.id);
+              if (!todo.isDone) {
+                if (!edit) {
+                  setEdit(true);
+                } else {
+                  handleEdit(todo.id);
+                }
               }
             }}
             size={20}
@@ -92,7 +104,7 @@ const SingleTodo: React.FC<{
         <span onClick={() => handleDelete(todo.id)}>
           <AiFillDelete size={20} />
         </span>
-        <span>
+        <span onClick={() => handleDone(todo.id)}>
           <MdDone size={20} />
         </span>
       </div>
