@@ -5,6 +5,7 @@ import TodoList from "./components/TodoList";
 export interface Todo {
   id: number;
   todo: string;
+  isDone: false;
 }
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       {
         id: Date.now(),
         todo,
+        isDone: false,
       },
     ]);
 
@@ -31,7 +33,7 @@ function App() {
         <h2 className="text-center">Keep Task</h2>
 
         <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
-        <TodoList todos={todos} />
+        <TodoList todos={todos} setTodos={setTodos} />
       </div>
     </>
   );

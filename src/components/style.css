@@ -44,11 +44,23 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+  justify-content: center;
 }
 .singleTodo {
   list-style: none;
-  background-color: whitesmoke;
-  padding: 5px;
-  border-radius: 2px;
+  background: url("https://img.freepik.com/free-photo/crumpled-yellow-paper-background-close-up_60487-2390.jpg?size=626&ext=jpg");
+  padding: 20px 10px;
+  border-radius: 5px;
   min-width: 300px;
+  display: flex;
+  justify-content: space-between;
+
+  & span {
+    cursor: pointer;
+    margin: 0 4px;
+  }
+
+  & .edit_field {
+    width: 65%;
+  }
 }
