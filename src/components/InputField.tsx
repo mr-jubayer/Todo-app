@@ -1,19 +1,22 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import "./style.css";
+import { Action } from "../App";
 
 interface props {
-  todo: string;
-  setTodo: React.Dispatch<React.SetStateAction<string>>;
-  handleAdd: (e: React.FormEvent) => void;
+  dispatch: React.ActionDispatch<[action: Action]>;
 }
 
-const InputField: React.FC<props> = ({ todo, setTodo, handleAdd }) => {
+const InputField: React.FC<props> = ({ dispatch }) => {
   const inputRef = useRef<null | HTMLInputElement>(null);
+  const [todo, setTodo] = useState<string>("");
+
   return (
     <form
       className="form"
       onSubmit={(e) => {
-        handleAdd(e);
+        e.preventDefault();
+
+        dispatch({ type: "add", payload: todo });
         inputRef.current?.blur();
       }}
     >

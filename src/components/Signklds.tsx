@@ -1,39 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import { Todo } from "../App";
+import { Action, Todo } from "../App";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 
 const SingleTodo: React.FC<{
   todo: Todo;
-  todos: Todo[];
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-}> = ({ todo, todos, setTodos }) => {
+  dispatch: React.ActionDispatch<[action: Action]>;
+}> = ({ todo, dispatch }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleEdit = (id: number) => {
-    const updatedTodo = todos.map((todo) =>
-      todo.id === id ? { ...todo, todo: editTodo } : todo
-    );
-
-    setTodos(updatedTodo);
+    dispatch({ type: "update", payload: { id, updatedTodo: editTodo } });
     setEdit(false);
   };
 
   const handleDelete = (id: number) => {
-    const deleteTodo = todos.filter((todo) => todo.id !== id);
-
-    setTodos(deleteTodo);
+    dispatch({ type: "delete", payload: id });
   };
 
   const handleDone = (id: number) => {
-    const doneTodo = todos.map((todo) =>
-      todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
-    );
-
-    setTodos(doneTodo);
+    dispatch({ type: "done", payload: id });
   };
 
   useEffect(() => {

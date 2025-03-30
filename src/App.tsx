@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
 
@@ -8,32 +8,55 @@ export interface Todo {
   isDone: false;
 }
 
+export type Action =
+  | { type: "add"; payload: string }
+  | { type: "delete"; payload: number }
+  | { type: "done"; payload: number }
+  | { type: "update"; payload: { id: number; updatedTodo: string } };
+
+const TodoReducer = (state: Todo[], action: Action) => {
+  switch (action.type) {
+    case "add":
+      return [
+        ...state,
+        {
+          id: Date.now(),
+          todo: action.payload,
+          isDone: false,
+        },
+      ];
+    case "delete":
+      return state.filter((todo) => todo.id !== action.payload);
+
+    case "done":
+      return state.map((todo) =>
+        todo.id === action.payload ? { ...todo, isDone: !todo.isDone } : todo
+      );
+
+    case "update":
+      return state.map((todo) =>
+        todo.id === action.payload.id
+          ? { ...todo, todo: action.payload.updatedTodo }
+          : todo
+      );
+
+    default:
+      break;
+  }
+};
+
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [todo, setTodo] = useState<string>("");
+  const [state, dispatch] = useReducer(TodoReducer, []);
 
-  const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setTodos((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        todo,
-        isDone: false,
-      },
-    ]);
-
-    setTodo("");
-  };
+  console.log(state);
 
   return (
     <>
       <div>
         <h2 className="text-center">Keep Task</h2>
 
-        <InputField todo={todo} setTodo={setTodo} handleAdd={handleAdd} />
-        <TodoList todos={todos} setTodos={setTodos} />
+        <InputField dispatch={dispatch} />
+        <TodoList todos={state} dispatch={dispatch} />
       </div>
     </>
   );
