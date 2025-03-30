@@ -5,7 +5,7 @@ import TodoList from "./components/TodoList";
 export interface Todo {
   id: number;
   todo: string;
-  isDone: false;
+  isDone: boolean;
 }
 
 export type Action =
@@ -41,6 +41,7 @@ const TodoReducer = (state: Todo[], action: Action) => {
       );
 
     default:
+      throw new Error("Unknown action!");
       break;
   }
 };
