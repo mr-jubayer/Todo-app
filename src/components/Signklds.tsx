@@ -1,28 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { Action, Todo } from "../App";
+import { Todo } from "../App";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./store/store";
+import { deleteTodo, done, update } from "./feature/todoSlice";
 
 const SingleTodo: React.FC<{
   todo: Todo;
-  dispatch: React.ActionDispatch<[action: Action]>;
-}> = ({ todo, dispatch }) => {
+}> = ({ todo }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
-
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleEdit = (id: number) => {
-    dispatch({ type: "update", payload: { id, updatedTodo: editTodo } });
+    dispatch(update({ id, todo: editTodo }));
     setEdit(false);
-  };
-
-  const handleDelete = (id: number) => {
-    dispatch({ type: "delete", payload: id });
-  };
-
-  const handleDone = (id: number) => {
-    dispatch({ type: "done", payload: id });
   };
 
   useEffect(() => {
@@ -50,27 +44,26 @@ const SingleTodo: React.FC<{
         <li> {todo.todo} </li>
       )}
       <div>
-        <span>
-          <AiFillEdit
-            onClick={() => {
-              if (!todo.isDone) {
-                if (!edit) {
-                  setEdit(true);
-                } else {
-                  handleEdit(todo.id);
-                }
+        <span
+          onClick={() => {
+            if (!todo.isDone) {
+              if (!edit) {
+                setEdit(true);
+              } else {
+                handleEdit(todo.id);
               }
-            }}
-            size={20}
-          />
+            }
+          }}
+        >
+          <AiFillEdit size={20} />
         </span>
-        <span onClick={() => handleDelete(todo.id)}>
+        <span onClick={() => dispatch(deleteTodo(todo.id))}>
           <AiFillDelete size={20} />
         </span>
         <span
           onClick={() => {
             if (!edit) {
-              handleDone(todo.id);
+              dispatch(done(todo.id));
             }
           }}
         >

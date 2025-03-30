@@ -1,17 +1,17 @@
-import { Action, Todo } from "../App";
+import { useSelector } from "react-redux";
 import SingleTodo from "./Signklds";
 import "./style.css";
+import { RootState } from "./store/store";
 
-interface props {
-  todos: Todo[];
-  dispatch: React.ActionDispatch<[action: Action]>;
-}
+const TodoList: React.FC = () => {
+  const todos = useSelector((state: RootState) => state.todos);
 
-const TodoList: React.FC<props> = ({ todos, dispatch }) => {
+  console.log(todos);
+
   return (
     <div className="todoList">
       {todos.map((todo) => {
-        return <SingleTodo key={todo.id} todo={todo} dispatch={dispatch} />;
+        return <SingleTodo key={todo.id} todo={todo} />;
       })}
     </div>
   );

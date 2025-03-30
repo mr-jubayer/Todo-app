@@ -1,4 +1,3 @@
-import { useReducer } from "react";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
 
@@ -14,20 +13,8 @@ export type Action =
   | { type: "done"; payload: number }
   | { type: "update"; payload: { id: number; updatedTodo: string } };
 
-const TodoReducer = (state: Todo[], action: Action) => {
+export const TodoReducer = (state: Todo[], action: Action) => {
   switch (action.type) {
-    case "add":
-      return [
-        ...state,
-        {
-          id: Date.now(),
-          todo: action.payload,
-          isDone: false,
-        },
-      ];
-    case "delete":
-      return state.filter((todo) => todo.id !== action.payload);
-
     case "done":
       return state.map((todo) =>
         todo.id === action.payload ? { ...todo, isDone: !todo.isDone } : todo
@@ -47,17 +34,13 @@ const TodoReducer = (state: Todo[], action: Action) => {
 };
 
 function App() {
-  const [state, dispatch] = useReducer(TodoReducer, []);
-
-  console.log(state);
-
   return (
     <>
       <div>
         <h2 className="text-center">Keep Task</h2>
 
-        <InputField dispatch={dispatch} />
-        <TodoList todos={state} dispatch={dispatch} />
+        <InputField />
+        <TodoList />
       </div>
     </>
   );

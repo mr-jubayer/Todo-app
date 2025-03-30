@@ -1,14 +1,13 @@
 import { useRef, useState } from "react";
 import "./style.css";
-import { Action } from "../App";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./store/store";
+import { add } from "./feature/todoSlice";
 
-interface props {
-  dispatch: React.ActionDispatch<[action: Action]>;
-}
-
-const InputField: React.FC<props> = ({ dispatch }) => {
+const InputField: React.FC = () => {
   const inputRef = useRef<null | HTMLInputElement>(null);
   const [todo, setTodo] = useState<string>("");
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <form
@@ -16,7 +15,13 @@ const InputField: React.FC<props> = ({ dispatch }) => {
       onSubmit={(e) => {
         e.preventDefault();
 
-        dispatch({ type: "add", payload: todo });
+        dispatch(
+          add({
+            id: Date.now(),
+            todo,
+            isDone: false,
+          })
+        );
         inputRef.current?.blur();
       }}
     >
